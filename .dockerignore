@@ -1,0 +1,4 @@
+generator
+kubernetes
+env
+__pycache__

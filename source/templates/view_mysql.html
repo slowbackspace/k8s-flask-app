@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block body %}
+    <div class="row">
+		<h1>data: {{ entries|length }} (filtered {{count}} )</h1>
+		<table class="table">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">id</th>
+					<th scope="col">sensor1</th>
+					<th scope="col">txt</th>
+					<th scope="col">date</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for entry in entries %}
+				<tr>
+					<td>{{ entry[0] }}</td>
+					<td>{{ entry[1] }}</td>
+                    <td>{{ entry[2] }} (trimmed)</td>
+                    <td>{{ entry[3] }}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+    </div>
+    <!-- <div class="row">
+        <pre>
+            {{ dbstats|tojson_pretty|safe}}
+        </pre>
+        <pre>
+            {{ collstats|tojson_pretty|safe }}
+        </pre>
+    </div> -->
+{% endblock %}

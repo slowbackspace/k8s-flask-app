@@ -1,0 +1,63 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: flask-app
+spec:
+  selector:
+    name: flask-app
+  ports:
+  - protocol: TCP
+    port: 5000
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app
+spec:
+  selector:
+    matchLabels:
+      name: flask-app
+  replicas: 6
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name: flask-app
+    spec:
+      containers:
+      - name: flask-app
+        image: spakmaro/flask_app:latest
+        command: ["/bin/sh"]
+        args: ["-c", "/usr/src/app/run_gunicorn.sh"]
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+          protocol: TCP
+        env:
+          - name: "DB_ADAPTER"
+            value: "cassandra"
+          - name: "CASSANDRA_HOST"
+            value: "cassandra-0.cassandra,cassandra-1.cassandra,cassandra-2.cassandra"
+          - name: "CASSANDRA_KEYSPACE"
+            value: "testing"
+          - name: CASSANDRA_USERNAME
+            value: "root"
+          - name: CASSANDRA_PASSWORD
+            value: "hesloheslo"
+          - name: "MYSQL_HOST"
+            value: "10.11.247.35"
+          - name: "MYSQL_USER"
+            value: "root"
+          - name: "MYSQL_PASSWORD"
+            value: "hesloheslo"
+          - name: "MYSQL_DATABASE"
+            value: "testing"
+          - name: "MONGODB_CONNECTION_URI"
+            # value: "mongodb://admin:abc123@mongos:27017/admin"
+            value: "mongodb://admin:abc123@mongod-rs-0.mongodb-rs-service:27017,mongod-rs-1.mongodb-rs-service:27017,mongod-rs-2.mongodb-rs-service:27017/admin?replicaSet=MainRepSet"
+      restartPolicy: Always

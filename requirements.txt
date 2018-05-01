@@ -1,0 +1,6 @@
+flask
+pymongo
+gunicorn
+mysqlclient
+cassandra-driver
+scales

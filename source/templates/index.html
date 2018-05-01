@@ -1,0 +1,102 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+
+	<title>spakmaro DP</title>
+	<meta name="author" content="spakmaro">
+
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+</head>
+
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<h1>mongos</h1>
+			<ul>
+				{% for mongo in mongos %}
+					<li>{{ mongo["_id"] }}</li>
+				{% endfor %}
+			</ul>
+
+			<h1>shards</h1>
+			<table class="table">
+				<thead class="thead-dark">
+						<tr>
+							<th scope="col">id</th>
+							<th scope="col">host</th>
+							<th scope="col">state</th>
+						</tr>
+					</thead>
+					<tbody>
+			{% for shard in shards %}
+					<tr>
+						<td>{{ shard["_id"] }}</td>
+						<td>
+							{% for host in shard.host.split(",") %}
+								{{ host }} <br />
+							{% endfor %}
+						</td>
+						<td class="text-center {{'ok' if shard.state == 1 else 'fail'}}"></td>
+					</tr>
+			{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<div class="row">
+			<h1>replica set members</h1>
+			{% for rs_name, members in rs_members.items() %}
+				<h3>{{rs_name}}</h3>
+				<table class="table">
+					<thead class="thead-dark">
+						<tr>
+							<th scope="col">name</th>
+							<th scope="col">state</th>
+							<th scope="col">syncingTo</th>
+							<th scope="col">uptime</th>
+						</tr>
+					</thead>
+						<tbody>
+							{% for member in members %}
+							<tr>
+								<td>{{member.name}}</td>
+								<td>{{member.stateStr}}</td>
+								<td>{{member.syncingTo}}</td>
+								<td>{{member.uptime}}</td>
+							</tr>
+							{% endfor %}
+					</tbody>
+				</table>
+			{% endfor %}
+		</div>
+	<div class="row">
+		<h1>chunks</h1>
+		<table class="table">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">id</th>
+					<th scope="col">shard</th>
+					<th scope="col">min</th>
+					<th scope="col">max</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for chunk in chunks %}
+				<tr>
+					<td>{{ chunk["_id"] }}</td>
+					<td>{{ chunk["shard"] }}</td>
+					<td>{{ chunk["min"] }}</td>
+					<td>{{ chunk["max"] }}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	</div>
+	<script src="js/scripts.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</body>
+</html>

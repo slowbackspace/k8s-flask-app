@@ -1,0 +1,6 @@
+td.ok {
+    background: green;
+}
+td.fail {
+    background: red;
+}
