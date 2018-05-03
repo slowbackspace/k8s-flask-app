@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
       - name: flask-app
-        image: spakmaro/flask_app:latest
+        image: spakmaro/k8s-flask-app:latest
         command: ["/bin/sh"]
         args: ["-c", "/usr/src/app/run_gunicorn.sh"]
         imagePullPolicy: Always
